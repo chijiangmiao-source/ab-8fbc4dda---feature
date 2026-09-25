@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="application-name" content="flux-phase-reconciler" />
+    <title>超导磁通探针整数相位面复核</title>
+  </head>
+  <body>
+    <main class="page">
+      <header>
+        <h1>超导磁通探针整数相位面复核</h1>
+        <p class="subtitle">
+          将带整周跳变的有向边差观测，精确复原为一张整数相位面——加权绝对值和最小，
+          同成本取字典序最小，全部计算在浏览器内的 Web Worker 中以整数最小割完成。
+        </p>
+      </header>
+
+      <section class="panel" id="globalPanel">
+        <h2>1. 基本参数</h2>
+        <div class="form-row">
+          <label>
+            探针总数（2–40）
+            <input type="number" id="probeCount" min="2" max="40" step="1" value="4" />
+          </label>
+          <label>
+            参考探针标识（固定为零）
+            <input type="number" id="referenceIdx" min="0" step="1" value="0" />
+          </label>
+          <div class="spacer"></div>
+          <button type="button" id="loadSampleA" class="ghost">载入闭环矛盾样例</button>
+          <button type="button" id="loadSampleB" class="ghost">载入“局部累加失败”样例</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>2. 各探针整数相位范围</h2>
+        <table class="grid">
+          <thead>
+            <tr>
+              <th>探针标识</th>
+              <th>整数相位下界</th>
+              <th>
+                上界
+                <button type="button" class="link" id="setAllRanges" title="把所有非参考探针的范围批量设为输入值">
+                  批量设置…
+                </button>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="probeTable"></tbody>
+        </table>
+      </section>
+
+      <section class="panel">
+        <h2>3. 有向观测边</h2>
+        <p class="hint">
+          每条边 u→v 表示观测到目标差值 x<sub>v</sub>−x<sub>u</sub>，权重为正整数；
+          目标差值为整数。可存在闭环与矛盾观测，由最小割统一仲裁。
+        </p>
+        <div class="form-row">
+          <button type="button" id="addEdge" class="secondary">＋ 新增观测边</button>
+          <span class="hint" id="edgeCount"></span>
+        </div>
+        <table class="grid edges">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>起点 u</th>
+              <th>终点 v</th>
+              <th>目标差值 x<sub>v</sub>−x<sub>u</sub></th>
+              <th>权重（正整数）</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="edgeTable"></tbody>
+        </table>
+      </section>
+
+      <section class="panel actions">
+        <button type="button" id="runBtn" class="primary">发起复核（最小割精确求解）</button>
+        <button type="button" id="cancelBtn" class="danger" disabled>取消计算</button>
+        <span id="statusLine" class="status" role="status" aria-live="polite"></span>
+      </section>
+
+      <section class="panel" id="resultPanel" hidden>
+        <h2>复核结论</h2>
+        <div id="errorList"></div>
+        <div id="resultBody"></div>
+      </section>
+    </main>
+    <script type="module" src="/src/ui/main.js"></script>
+  </body>
+</html>

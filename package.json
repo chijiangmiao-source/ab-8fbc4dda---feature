@@ -1,0 +1,16 @@
+{
+  "name": "flux-phase-reconciler",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "超导磁通探针阵列整数相位面复核（加权 L1 边差的最小割精确求解）",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --host",
+    "test": "node --test test/"
+  },
+  "devDependencies": {
+    "vite": "^8.3.1"
+  }
+}

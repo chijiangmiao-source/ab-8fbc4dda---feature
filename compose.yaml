@@ -1,0 +1,31 @@
+# 超导磁通探针整数相位面复核 —— 静态应用 + 一次性复核容器
+#
+#   启动宿主机可访问的页面：
+#     docker compose up web            # 然后浏览器打开 http://localhost:8080
+#   跑完整复核（代码测试 + 构建检查 + HTTP 冒烟，结束后自行退出）：
+#     docker compose up --build verify # 退出码即复核结果（0 成功）
+#
+# 宿主机端口可用环境变量覆盖：WEB_PORT=9000 docker compose up web
+services:
+  web:
+    build:
+      context: .
+      target: web
+    image: flux-phase-reconciler-web
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    restart: unless-stopped
+    # 健康检查在 Dockerfile 中定义（shell 形式）：首页必须包含应用标记。
+
+  verify:
+    build:
+      context: .
+      target: verify
+    image: flux-phase-reconciler-verify
+    environment:
+      WEB_URL: "http://web/"
+    depends_on:
+      web:
+        condition: service_healthy
+    # 一次性容器：跑完 scripts/verify.sh 即退出，退出码报告复核结果。
+    restart: "no"
