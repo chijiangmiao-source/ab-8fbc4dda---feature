@@ -349,3 +349,35 @@ button:disabled {
 .warn {
   color: var(--warn);
 }
+
+/* ---- 复测闭环规划 ---- */
+.recheck-cell {
+  text-align: center;
+}
+
+.recheck-cell input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  min-width: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.suspicious-row {
+  background: rgba(255, 206, 92, 0.08);
+}
+
+.badge-warn {
+  background: rgba(255, 206, 92, 0.15);
+  color: var(--warn);
+  border-color: rgba(255, 206, 92, 0.4);
+}
+
+.tag-unreachable,
+.tag-start,
+.tag-required {
+  color: #ffc4c4;
+  border-color: rgba(255, 107, 107, 0.4);
+  background: rgba(255, 107, 107, 0.08);
+}
