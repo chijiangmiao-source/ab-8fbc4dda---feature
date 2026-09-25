@@ -349,3 +349,48 @@ button:disabled {
 .warn {
   color: var(--warn);
 }
+
+/* ---- 复测闭环规划 ---- */
+.check-cell {
+  text-align: center;
+  width: 48px;
+}
+
+.check-cell input[type='checkbox'] {
+  width: 16px;
+  min-width: 0;
+  height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.muted-banner {
+  background: rgba(147, 161, 189, 0.08);
+  border-color: rgba(147, 161, 189, 0.35);
+  color: var(--muted);
+}
+
+.unreach-items .mono {
+  color: #ffc4c4;
+}
+
+.tag-first {
+  color: var(--good);
+  border-color: rgba(61, 220, 151, 0.45);
+  background: rgba(61, 220, 151, 0.1);
+}
+
+.tag-repeat {
+  color: var(--warn);
+  border-color: rgba(255, 206, 92, 0.45);
+  background: rgba(255, 206, 92, 0.1);
+}
+
+.tag-transit {
+  color: var(--muted);
+}
+
+.route-steps,
+.route-first {
+  font-size: 13.5px;
+}

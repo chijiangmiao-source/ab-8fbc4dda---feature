@@ -12,8 +12,8 @@ npm test
 echo "== [2/3] 构建检查（vite build 产出纯静态应用） =="
 npm run build
 test -f dist/index.html
-# BusyBox/GNU find 均可：用 shell 通配确认 Worker bundle 已产出。
-ls dist/assets/solver.worker-*.js >/dev/null 2>&1
+# BusyBox/GNU find 均可：用 shell 通配确认全部 Worker bundle 已产出。
+ls dist/assets/*.worker-*.js >/dev/null 2>&1
 
 echo "== [3/3] HTTP 冒烟：等待 ${BASE_URL} 静态应用就绪 =="
 READY=0
@@ -43,16 +43,17 @@ for asset in $(grep -oE 'assets/[^"]+' /tmp/index.html | sort -u); do
   fi
 done
 
-# 主 JS chunk 中引用的 Worker bundle 必须存在于部署产物中。
+# 主 JS chunk 中引用的全部 Worker bundle 必须存在于部署产物中。
 MAIN_JS=$(grep -oE 'assets/index-[^"]+\.js' /tmp/index.html | head -1)
 wget -q -O /tmp/main.js "${BASE_URL%/}/${MAIN_JS}"
-WORKER_REF=$(grep -oE 'solver\.worker-[^"]+\.js' /tmp/main.js | head -1)
-if [ -z "${WORKER_REF}" ]; then
-  echo "FAIL: 主脚本中未找到 solver Worker bundle 引用" >&2
-  exit 1
-fi
-wget -q -O /dev/null "${BASE_URL%/}/assets/${WORKER_REF}"
-echo "OK: Worker bundle assets/${WORKER_REF} 可获取"
+for WORKER_REF in $(grep -oE '[A-Za-z0-9._-]+\.worker-[^"]+\.js' /tmp/main.js | sort -u); do
+  if wget -q -O /dev/null "${BASE_URL%/}/assets/${WORKER_REF}"; then
+    echo "OK: Worker bundle assets/${WORKER_REF} 可获取"
+  else
+    echo "FAIL: Worker bundle 不可达：assets/${WORKER_REF}" >&2
+    exit 1
+  fi
+done
 
 # 健康检查端点。
 wget -q -O - "${BASE_URL%/}/healthz" | grep -qx ok

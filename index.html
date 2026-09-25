@@ -30,6 +30,7 @@
           <div class="spacer"></div>
           <button type="button" id="loadSampleA" class="ghost">载入闭环矛盾样例</button>
           <button type="button" id="loadSampleB" class="ghost">载入“局部累加失败”样例</button>
+          <button type="button" id="loadSampleC" class="ghost">载入单向绕行复测样例</button>
         </div>
       </section>
 
@@ -70,6 +71,7 @@
               <th>终点 v</th>
               <th>目标差值 x<sub>v</sub>−x<sub>u</sub></th>
               <th>权重（正整数）</th>
+              <th title="勾选后该边成为复测闭环必须经过的可疑边（至多 24 条）">复测</th>
               <th></th>
             </tr>
           </thead>
@@ -84,9 +86,29 @@
       </section>
 
       <section class="panel" id="resultPanel" hidden>
-        <h2>复核结论</h2>
+        <h2>相位面复核结论</h2>
         <div id="errorList"></div>
         <div id="resultBody"></div>
+      </section>
+
+      <section class="panel" id="repathPanel">
+        <h2>4. 有向复测闭环规划</h2>
+        <p class="hint">
+          取得相位面后，可在上方边表勾选至多 24 条需要重新测量的观测边为可疑边，
+          指定出发探针并生成一条回到出发点的<strong>最短有向闭环</strong>：
+          规划只能沿当前录入的有向观测边前进，被勾选边至少经过一次，其他边可作过渡。
+        </p>
+        <div class="form-row">
+          <label>
+            出发探针
+            <input type="number" id="routeStart" min="0" step="1" value="0" />
+          </label>
+          <button type="button" id="routeRunBtn" class="secondary">生成复测闭环</button>
+          <button type="button" id="routeClearBtn" class="ghost">清除路线</button>
+          <span class="hint" id="routeCount"></span>
+        </div>
+        <div id="routeError"></div>
+        <div id="routeResult" hidden></div>
       </section>
     </main>
     <script type="module" src="/src/ui/main.js"></script>
